@@ -2,13 +2,13 @@ package com.example.forecast;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuButton;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import org.javamoney.moneta.*;
 
 import java.io.IOException;
+import java.util.Currency;
 
 public class ForeCast extends Application {
     private int HEIGHT = 720;
@@ -17,11 +17,9 @@ public class ForeCast extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ForeCast.class.getResource("hello-view.fxml"));
-
-        Scene scene = new Scene(fxmlLoader.load());
-
         stage.setTitle("Forecast");
-        stage.setScene(scene);
+        Money a;
+        stage.setScene(new Scene(fxmlLoader.load()));
         stage.show();
     }
 
