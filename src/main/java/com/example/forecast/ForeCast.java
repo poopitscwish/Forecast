@@ -7,23 +7,31 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.javamoney.moneta.*;
 
+import javax.money.CurrencyUnit;
+import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
+import javax.money.convert.CurrencyConversion;
+import javax.money.convert.ExchangeRate;
+import javax.money.convert.ExchangeRateProvider;
+import javax.money.convert.MonetaryConversions;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Currency;
+import java.util.List;
+
 
 public class ForeCast extends Application {
-    private int HEIGHT = 720;
-    private int WIDTH = 720;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(ForeCast.class.getResource("hello-view.fxml"));
         stage.setTitle("Forecast");
-        Money a;
         stage.setScene(new Scene(fxmlLoader.load()));
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         launch();
     }
 }
