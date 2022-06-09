@@ -7,7 +7,7 @@ import java.util.DoubleSummaryStatistics;
 public class Statistics {
     ArrayList data;
     int size;
-
+//Здесь статистика ничего интересного
     public Statistics(ArrayList<Double> data) {
         this.data = data;
         size = data.size();

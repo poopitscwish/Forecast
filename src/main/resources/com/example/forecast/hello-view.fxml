@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -13,13 +14,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<SplitPane dividerPositions="0.04430379746835443, 0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="634.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.forecast.HelloController">
+<SplitPane dividerPositions="0.04430379746835443, 0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="634.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.forecast.HelloController">
   <items>
     <MenuBar prefHeight="25.0" prefWidth="844.0">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem fx:id="Open" mnemonicParsing="false" onAction="#OpneFile" onMenuValidation="#OpneFile" text="Open" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -41,15 +42,15 @@
     </MenuBar>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="900.0">
       <children>
-        <LineChart id="chart1" fx:id="chart1" layoutX="99.0" layoutY="4.0" mouseTransparent="true" prefHeight="297.0" prefWidth="532.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="99.0" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="4.0">
+        <LineChart id="chart1" fx:id="chart1" layoutX="6.0" layoutY="2.0" prefHeight="297.0" prefWidth="532.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="363.0" AnchorPane.topAnchor="2.0">
           <xAxis>
-            <NumberAxis side="BOTTOM" />
+            <CategoryAxis label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" side="BOTTOM" />
           </xAxis>
           <yAxis>
-            <NumberAxis side="LEFT" />
+            <NumberAxis label="Цена за 1 доллар в рублях" side="LEFT" />
           </yAxis>
         </LineChart>
-        <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="631.0" layoutY="4.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="146.0" prefWidth="101.0">
+        <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="626.0" layoutY="2.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="146.0" prefWidth="167.0">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor></TextFlow>
@@ -62,15 +63,15 @@
     </AnchorPane>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="305.0" prefWidth="900.0">
          <children>
-            <LineChart fx:id="chart2" layoutX="14.0" layoutY="14.0" prefHeight="297.0" prefWidth="532.0">
+            <LineChart fx:id="chart2" layoutY="14.0" prefHeight="297.0" prefWidth="532.0">
               <xAxis>
-                <NumberAxis side="BOTTOM" />
+                <CategoryAxis label="Дата" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis label="Цена за 1 доллар в рублях" side="LEFT" />
               </yAxis>
             </LineChart>
-            <ScrollPane layoutX="546.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.rightAnchor="0.0">
+            <ScrollPane layoutX="532.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.rightAnchor="168.0">
                <content>
                   <TextFlow fx:id="text2" prefHeight="200.0" prefWidth="200.0" />
                </content>

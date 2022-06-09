@@ -1,5 +1,6 @@
 package com.example.forecast;
 
+import javafx.scene.control.Alert;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -9,19 +10,19 @@ import java.io.*;
 import java.util.*;
 
 
-public class Parsing {
+public class Parsing {//Здесь парсинг
     String path;
     String name;
     FileInputStream file;
     HashMap<Integer, List<Object>> data = new HashMap<>();
+    List<Object> time = new ArrayList<>();
 
-    public Parsing(String path, String name) {
+    public Parsing(String path) {
         this.path = path;
-        this.name = name;
     }
 
-    public void read() throws IOException {
-        Workbook workbook = loadWorkbook(path + name);
+    public void read() throws IOException {//Считывает листы с эксель файла
+        Workbook workbook = loadWorkbook(path);
         var sheetIterator = workbook.sheetIterator();
         while (sheetIterator.hasNext()) {
             Sheet sheet = sheetIterator.next();
@@ -30,7 +31,7 @@ public class Parsing {
         }
     }
 
-    private Workbook loadWorkbook(String filename) throws IOException {
+    private Workbook loadWorkbook(String filename) throws IOException {//Здесь просто загрузка файла
         var extension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
         var file = new FileInputStream(filename);
         switch (extension) {
@@ -54,26 +55,26 @@ public class Parsing {
             processRow(data, rowIndex, row);
         }
         System.out.println("Sheet data:");
-        System.out.println(data);
+        System.out.println(data);// --->Hushmap всего листа
         this.data = data;
     }
 
     private void processRow(HashMap<Integer, List<Object>> data, int rowIndex, Row row) {
-        data.put(rowIndex, new ArrayList<>());
+        data.put(rowIndex, new ArrayList<>());//Построчно каждую ячейку считываем
         for (var cell : row) {
             processCell(cell, data.get(rowIndex));
         }
 
     }
 
-    private void processCell(Cell cell, List<Object> dataRow) {
+    private void processCell(Cell cell, List<Object> dataRow) {//Определяем что в ячейке
         switch (cell.getCellType()) {
             case STRING:
                 dataRow.add(cell.getStringCellValue());
                 break;
             case NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    dataRow.add(cell.getLocalDateTimeCellValue());
+                    dataRow.add(cell.getLocalDateTimeCellValue().toLocalDate());
                 } else {
                     dataRow.add(NumberToTextConverter.toText(cell.getNumericCellValue()));
                 }
@@ -89,7 +90,7 @@ public class Parsing {
         }
     }
 
-    public ArrayList getData() {
+    public ArrayList getData() {//Массив курса доллара
         ArrayList<Double> curs = new ArrayList<>();
         int k = 0;
         try {
@@ -98,16 +99,37 @@ public class Parsing {
                     curs.add(Double.parseDouble(entry.getValue().get(2).toString()));
                 k = 1;
             }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("Успешно!");
+            alert.showAndWait();
         } catch (Exception exception) {
-            exception.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+            alert.setTitle("Ошибка");
+            alert.setHeaderText(null);
+            alert.setContentText("Были подгруженные поврежденные данные");
+
+            alert.showAndWait();
         }
 
-        return sort(curs);
+        return (ArrayList) sort(curs);
     }
 
-    private ArrayList sort(ArrayList<Double> l) {
-        System.out.println(l);
-        ArrayList<Double> curs = new ArrayList<>();
+    public List<String> getTime(){//Массив датт
+        List<String> time = new ArrayList<>();
+        int k = 0;
+        for(Map.Entry<Integer,List<Object>> entry : data.entrySet()){
+            if(k!=0)
+                time.add(entry.getValue().get(1).toString());
+            k=1;
+        }
+        return sort(time);
+    }
+
+    private List sort(List l) {//сортировка
+        ArrayList curs = new ArrayList<>();
         for (int i = l.size() - 1; i >= 0; i--) {
             curs.add(l.get(i));
         }
