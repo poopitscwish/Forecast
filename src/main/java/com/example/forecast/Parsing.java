@@ -120,11 +120,17 @@ public class Parsing {//Здесь парсинг
     public List<String> getTime(){//Массив датт
         List<String> time = new ArrayList<>();
         int k = 0;
+        String[] a;
+        StringBuilder result = new StringBuilder();
         for(Map.Entry<Integer,List<Object>> entry : data.entrySet()){
-            if(k!=0)
-                time.add(entry.getValue().get(1).toString());
+            if(k!=0) {
+                a = entry.getValue().get(1).toString().split("-");
+                time.add((result.append(a[2]+"-"+a[1]+"-"+a[0]).toString()));
+                result.delete(0,result.length());
+            }
             k=1;
         }
+
         return sort(time);
     }
 

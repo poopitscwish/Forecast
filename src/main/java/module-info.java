@@ -21,6 +21,7 @@ module com.example.forecast {
     requires xmlbeans;
     requires org.apache.commons.collections4;
     requires java.desktop;
+
     opens com.example.forecast to javafx.fxml;
     exports com.example.forecast;
 }
