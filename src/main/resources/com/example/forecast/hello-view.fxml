@@ -20,7 +20,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem fx:id="Open" mnemonicParsing="false" onAction="#OpneFile" onMenuValidation="#OpneFile" text="Open" />
+            <MenuItem fx:id="Open" mnemonicParsing="false" onAction="#OpenFile" onMenuValidation="#OpenFile" text="Open" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -42,7 +42,7 @@
     </MenuBar>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="807.0">
       <children>
-        <LineChart id="chart1" fx:id="chart1" disable="true" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
+        <LineChart id="chart1" fx:id="chart1" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
           <xAxis>
             <NumberAxis fx:id="X1" label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" tickLabelRotation="-53.1" />
           </xAxis>
@@ -53,9 +53,6 @@
                      </cursor>
                   </NumberAxis>
           </yAxis>
-               <cursor>
-                  <Cursor fx:constant="CROSSHAIR" />
-               </cursor>
         </LineChart>
         <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="540.0" layoutY="14.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="193.0" prefWidth="189.0" style="-fx-background-color: #bfbcbf;">
                <cursor>
