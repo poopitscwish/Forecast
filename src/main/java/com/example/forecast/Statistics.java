@@ -17,13 +17,13 @@ public class Statistics {
         return data.stream().mapToDouble(n -> (double) n).summaryStatistics();
     }
 
-    double getVariance() {
+     public double getVariance() {
         double mean = data.stream().mapToDouble(n->(double) n).average().getAsDouble();
         double temp = data.stream().mapToDouble(n -> ( (double)n - mean) * ( (double) n - mean)).sum();
         return temp/(size-1);
     }
 
-    double getStdDev() {
+    public double getStdDev() {
         return Math.sqrt(getVariance());
     }
 

@@ -13,7 +13,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-
 <VBox prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.forecast.HelloController">
    <children>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="305.0" prefWidth="900.0" />
@@ -43,9 +42,9 @@
     </MenuBar>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="807.0">
       <children>
-        <LineChart id="chart1" fx:id="chart1" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
+        <LineChart id="chart1" fx:id="chart1" disable="true" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
           <xAxis>
-            <NumberAxis fx:id="X1" label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" tickLabelFill="#83c31e" tickLabelRotation="-53.1" />
+            <NumberAxis fx:id="X1" label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" tickLabelRotation="-53.1" />
           </xAxis>
           <yAxis>
             <NumberAxis fx:id="Y1" forceZeroInRange="false" label="Цена за 1 доллар в рублях" side="LEFT" upperBound="150.0">
@@ -58,14 +57,14 @@
                   <Cursor fx:constant="CROSSHAIR" />
                </cursor>
         </LineChart>
-        <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="553.0" layoutY="14.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="193.0" prefWidth="189.0" style="-fx-background-color: #bfbcbf;">
+        <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="540.0" layoutY="14.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="193.0" prefWidth="189.0" style="-fx-background-color: #bfbcbf;">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </TextFlow>
-            <ScrollPane layoutX="553.0" layoutY="241.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.rightAnchor="54.0">
+            <ScrollPane layoutX="553.0" layoutY="241.0" prefHeight="200.0" prefWidth="189.0" AnchorPane.rightAnchor="70.0">
                <content>
-                  <TextFlow fx:id="text2" prefHeight="192.0" prefWidth="201.0" />
+                  <TextFlow fx:id="text2" prefHeight="192.0" prefWidth="182.0" />
                </content>
             </ScrollPane>
             <Button layoutX="14.0" layoutY="444.0" mnemonicParsing="false" onMouseClicked="#predict" text="Прогноз">

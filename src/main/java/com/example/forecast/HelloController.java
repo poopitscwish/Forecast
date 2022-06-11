@@ -4,42 +4,43 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.chart.*;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.RichTextString;
 
-import java.awt.Desktop;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
 
 
 public class HelloController implements Initializable {
-    @FXML
-    NumberAxis X1;
-    @FXML
-    NumberAxis Y1;
+
     @FXML
     LineChart chart1;
     @FXML
     TextFlow text;
     @FXML
     TextFlow text2;
-    @FXML
-    private Desktop desktop = Desktop.getDesktop();
-
 
     private XYChart.Series<Number, Number> series;
+    private XYChart.Series<Number, Number> series2;
     private ArrayList<Double> curs;
     String textArea;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Graph("G:\\data\\RC_F01_05_2022_T01_06_2022.xlsx");
         text.getChildren().clear();//Очистка полей
         text2.getChildren().clear();
         chart1.getData().clear();
@@ -69,7 +70,7 @@ public class HelloController implements Initializable {
             chart1.setCreateSymbols(true);
             //chart1.getStylesheets().add(ForeCast.class.getResource("G:\\asd.css").toExternalForm());
             chart1.getData().addAll(series);// добовляю на lInechart серии значений
-            ObservableList<XYChart.Data> dataList = ((XYChart.Series)   chart1.getData().get(0)  ).getData();
+            ObservableList<XYChart.Data> dataList = ((XYChart.Series) chart1.getData().get(0)).getData();
             dataList.forEach(data -> {
                 Node node = data.getNode();
                 Tooltip tooltip = new Tooltip('(' + data.getXValue().toString() + ';' + data.getYValue().toString() + ')');  //Этот код должен был давать подсказки при наведении на значения, но почему-то не работает. Ссылка откуда брал информацию URL: https://habr.com/ru/post/242009/
@@ -94,6 +95,7 @@ public class HelloController implements Initializable {
     //Открытие фала по нажатию на кнопку меню 'Open' на главном экране вызывается этот метод
     public void OpneFile() {
         textArea = "";
+        text2.getChildren().clear();
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
         if (file != null) {
@@ -131,7 +133,22 @@ public class HelloController implements Initializable {
 
     //Прогнозирование
     public void predict() {
+        chart1.setCreateSymbols(false);
         Statistics stat = new Statistics(curs);
+        if (series2 != null)
+            chart1.getData().remove(series2);
+        int line = 0;
+        String a = JOptionPane.showInputDialog("Введите насколько продлить линию регрессии");
+        try {
+            line = Integer.parseInt(a);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("Введите числа");
+            alert.showAndWait();
+        }
+
         //Здесь я пытался решить систему уравнений
         int[] x = new int[curs.size()];
         double[] y = new double[curs.size()];
@@ -161,19 +178,25 @@ public class HelloController implements Initializable {
         var Qx = sumX2 - (sumX * sumX) / curs.size();
         var Qxy = sumXY - (sumX * sumY) / curs.size();
         var b1 = Qxy / Qx;
-        double[] _Y = new double[curs.size()];
+        float[] _Y = new float[curs.size() + line];
         for (int i = 0; i < _Y.length; i++) {
-            _Y[i] = _y + b1 * (x[i] - _x);
+            _Y[i] = (float) (_y + b1 * (i - _x));
         }
 
-
+        series2 = new XYChart.Series<>();
         //Отрисовка второго графика
         series.setName("USD");
-        XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
         series2.setName("Predict");
-        for (int k = 0; k < curs.size(); k++) {
+        Text text = new Text();
+        StringBuilder str = new StringBuilder();
+        for (int k = 0; k < curs.size() + line; k++) {
             series2.getData().add(new XYChart.Data<>(k, _Y[k]));
+            if(k>= curs.size())
+            str.append(k + ")" + _Y[k] + "\n");
         }
+        text.setFill(javafx.scene.paint.Color.RED);
+        text.setText(str.toString());
+        text2.getChildren().add(text);
         chart1.getData().addAll(series2);
     }
 }

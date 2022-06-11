@@ -12,10 +12,7 @@ import java.util.*;
 
 public class Parsing {//Здесь парсинг
     String path;
-    String name;
-    FileInputStream file;
     HashMap<Integer, List<Object>> data = new HashMap<>();
-    List<Object> time = new ArrayList<>();
 
     public Parsing(String path) {
         this.path = path;
@@ -42,7 +39,13 @@ public class Parsing {//Здесь парсинг
                 // new format
                 return new XSSFWorkbook(file);
             default:
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText(null);
+                alert.setContentText("Проверьте целостность файла");
+                alert.showAndWait();
                 throw new RuntimeException("Unknown Excel file extension: " + extension);
+
         }
     }
 
