@@ -42,7 +42,7 @@
     </MenuBar>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="807.0">
       <children>
-        <LineChart id="chart1" fx:id="chart1" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
+        <LineChart id="chart1" fx:id="chart1" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" style="-fx-create-symbols: true;" styleClass=".chart-line-symbol {    -fx-background-color: #f9d900, firebrick;    -fx-background-radius: 0px;}" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
           <xAxis>
             <NumberAxis fx:id="X1" label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" tickLabelRotation="-53.1" />
           </xAxis>

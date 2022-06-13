@@ -6,24 +6,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.Cursor;
+import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import javax.swing.*;
 
@@ -46,7 +47,7 @@ public class HelloController {
     private NumberAxis Y1;
 
     @FXML
-    private LineChart<NumberAxis,NumberAxis> chart1;
+    private LineChart<NumberAxis, NumberAxis> chart1;
 
     @FXML
     private TextFlow text;
@@ -68,7 +69,8 @@ public class HelloController {
         assert chart1 != null : "fx:id=\"chart1\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert text != null : "fx:id=\"text\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert text2 != null : "fx:id=\"text2\" was not injected: check your FXML file 'hello-view.fxml'.";
-        chart1.setData(FXCollections.observableArrayList(new XYChart.Series("USD", plot(1,2,3,4,5))));
+        chart1.setData(FXCollections.observableArrayList(new XYChart.Series("USD", plot(1, 2, 3, 4, 5))));
+        chart1.getStylesheets().add(getClass().getResource("mycss.css").toExternalForm());
     }
 
     public void GetData(String path) {
@@ -79,14 +81,14 @@ public class HelloController {
             this.curs = new ArrayList<>(parsing.getData());
             float[] a = new float[curs.size()];
             float t = 0;
-            for(int i = 0; i<curs.size();i++){
-                t =Float.parseFloat(curs.get(i).toString());
+            for (int i = 0; i < curs.size(); i++) {
+                t = Float.parseFloat(curs.get(i).toString());
                 a[i] = t;
             }
             chart1.setCursor(Cursor.CROSSHAIR);
             series = new XYChart.Series<>();
-            for(int i = 0; i<curs.size();i++){
-                series.getData().add(new XYChart.Data<>(i,curs.get(i)));
+            for (int i = 0; i < curs.size(); i++) {
+                series.getData().add(new XYChart.Data<>(i, curs.get(i)));
             }
             //chart1.setData(FXCollections.observableArrayList(new XYChart.Series("USD", plot(a))));
         } catch (Exception e) {
@@ -94,7 +96,7 @@ public class HelloController {
         }
     }
 
-    public void Stat(){
+    public void Stat() {
         Statistics stat = new Statistics(curs);// здесь статистика
         System.out.println(stat.getMean());
         text.getChildren().add(new TextFlow(new Text(String.format(
@@ -106,16 +108,27 @@ public class HelloController {
                 (float) stat.getStdDev(),
                 stat.median()))));
     }
+
     //Отрисовка графика
     public void Graph(XYChart.Series series, String name, int code) {
         series.setName(name);
+        String result ="";
+        int i =0;
         try {
             chart1.getData().add(series);// добовляю на lInechart серии значений
-            for(var s : chart1.getData())
-            for (XYChart.Data<NumberAxis,NumberAxis> entry: s.getData()) {
-                Tooltip t = new Tooltip(String.format("%.2f",entry.getYValue()));
-                Tooltip.install(entry.getNode(), t);
-            }
+            for (var s : chart1.getData())
+                for (XYChart.Data<NumberAxis, NumberAxis> entry : s.getData()) {
+                    if(chart1.getData().indexOf(s) ==0 ){
+                        result = String.format("%s - %.2f", parsing.getTime().get(i), entry.getYValue());
+                        Tooltip t = new Tooltip(result);
+                        Tooltip.install(entry.getNode(), t);
+                        i++;
+                    }else {
+                        Tooltip t = new Tooltip(String.format("%.2f", entry.getYValue()));
+                        Tooltip.install(entry.getNode(), t);
+                    }
+                }
+            i=0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,7 +141,7 @@ public class HelloController {
             final XYChart.Data<Integer, Float> data = new XYChart.Data<>(i + 1, y[i]);
             data.setNode(
                     new HoveredThresholdNode(
-                            (i == 0) ? 0 : y[i-1],
+                            (i == 0) ? 0 : y[i - 1],
                             y[i]
                     )
             );
@@ -139,6 +152,7 @@ public class HelloController {
 
         return dataset;
     }
+
     class HoveredThresholdNode extends StackPane {
         HoveredThresholdNode(float priorValue, float value) {
             setPrefSize(15, 15);
@@ -155,6 +169,7 @@ public class HelloController {
                 setCursor(Cursor.CROSSHAIR);
             });
         }
+
         private Label createDataThresholdLabel(float priorValue, float value) {
             final Label label = new Label(value + "");
             label.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
@@ -172,6 +187,7 @@ public class HelloController {
             return label;
         }
     }
+
     //Открытие фала по нажатию на кнопку меню 'Open' на главном экране вызывается этот метод
     public void OpenFile() {
         chart1.getData().clear();
@@ -186,7 +202,7 @@ public class HelloController {
         }
         System.out.println(textArea);
         GetData(textArea);
-        Graph(series, "USD",0);
+        Graph(series, "USD", 0);
         Stat();
     }
 
@@ -271,7 +287,6 @@ public class HelloController {
         Text text = new Text();
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < curs.size(); i++) {
-            series.getData().add(new XYChart.Data<>(i, curs.get(i))); //Здесь добавляю к серии значений по Х - даты по У - курс
             text2.getChildren().add(new Text(i + ") " + parsing.getTime().get(i) + " - " + curs.get(i) + "\n"));
         }
         text.setText(str.toString());
@@ -279,11 +294,31 @@ public class HelloController {
         str.delete(0, str.length());
         for (int k = 0; k < curs.size() + line; k++) {
             series2.getData().add(new XYChart.Data<>(k, _Y[k]));
-            if(k>=curs.size())
-                str.append(k+")"+_Y[k]+"\n");
+            if (k >= curs.size())
+                str.append(k + ")" + _Y[k] + "\n");
         }
         text.setFill(javafx.scene.paint.Color.RED);
         text.setText(str.toString());
-        Graph(series2,"Predict",1);
+        Graph(series2, String.format("y=%.2f*(x-%s)+%.2f", b1,_x,_y),1);
+    }
+
+    private void doZoom(Rectangle zoomRect, LineChart<Number, Number> chart) {
+        Point2D zoomTopLeft = new Point2D(zoomRect.getX(), zoomRect.getY());
+        Point2D zoomBottomRight = new Point2D(zoomRect.getX() + zoomRect.getWidth(), zoomRect.getY() + zoomRect.getHeight());
+        final NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        Point2D yAxisInScene = yAxis.localToScene(0, 0);
+        final NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        Point2D xAxisInScene = xAxis.localToScene(0, 0);
+        double xOffset = zoomTopLeft.getX() - yAxisInScene.getX() ;
+        double yOffset = zoomBottomRight.getY() - xAxisInScene.getY();
+        double xAxisScale = xAxis.getScale();
+        double yAxisScale = yAxis.getScale();
+        xAxis.setLowerBound(xAxis.getLowerBound() + xOffset / xAxisScale);
+        xAxis.setUpperBound(xAxis.getLowerBound() + zoomRect.getWidth() / xAxisScale);
+        yAxis.setLowerBound(yAxis.getLowerBound() + yOffset / yAxisScale);
+        yAxis.setUpperBound(yAxis.getLowerBound() - zoomRect.getHeight() / yAxisScale);
+        System.out.println(yAxis.getLowerBound() + " " + yAxis.getUpperBound());
+        zoomRect.setWidth(0);
+        zoomRect.setHeight(0);
     }
 }

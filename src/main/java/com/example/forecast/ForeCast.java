@@ -26,13 +26,14 @@ import java.util.List;
 
 public class ForeCast extends Application {
 
-    private Desktop desktop = Desktop.getDesktop();
+
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ForeCast.class.getResource("hello-view.fxml"));
         stage.setTitle("Forecast");
-        stage.setScene(new Scene(fxmlLoader.load()));
+        Scene scene = new Scene (fxmlLoader.load());
+        stage.setScene(scene);
         stage.show();
     }
 
