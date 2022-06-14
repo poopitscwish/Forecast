@@ -1,27 +1,24 @@
 package com.example.forecast;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.ResourceBundle;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
@@ -54,7 +51,7 @@ public class HelloController {
 
     @FXML
     private TextFlow text2;
-
+    static int numerator = 1;
     private XYChart.Series<Number, Number> series;
     private XYChart.Series<Number, Number> series2;
     private ArrayList<Double> curs;
@@ -71,6 +68,76 @@ public class HelloController {
         assert text2 != null : "fx:id=\"text2\" was not injected: check your FXML file 'hello-view.fxml'.";
         chart1.setData(FXCollections.observableArrayList(new XYChart.Series("USD", plot(1, 2, 3, 4, 5))));
         chart1.getStylesheets().add(getClass().getResource("mycss.css").toExternalForm());
+    }
+
+    public void EnterData() {
+        String a = JOptionPane.showInputDialog("Введите данные через запятую");
+        String[] result = a.split(",");
+        ArrayList<Double> data = new ArrayList<>();
+        series = new XYChart.Series<>();
+        try {
+            for (int i = 0; i < result.length; i++) {
+                data.add(Double.parseDouble(result[i]));
+                series.getData().add(new XYChart.Data<>(i, data.get(i)));
+            }
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Выбор");
+            alert.setHeaderText("Создать новый график?");
+            alert.setContentText("Нажмите ОК для запуска и Cancel для отмены");
+            Optional<ButtonType> option = alert.showAndWait();
+
+            if (option.get() == null || option.get() == ButtonType.CANCEL) {
+                chart1.getData().clear();
+                text2.getChildren().clear();
+                curs = new ArrayList<>(data);
+                Graph(series);
+            } else if (option.get() == ButtonType.OK) {
+                Graph(series);
+            }
+            numerator++;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("Были введены некорректные значения");
+            alert.showAndWait();
+            EnterData();
+
+        }
+    }
+
+    public void SetPoint(){
+        ChoiceDialog<XYChart.Series> dialog = new ChoiceDialog<>();
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        dialog.setContentText("К какому графику добавить?");
+        dialog.setHeaderText(null);
+        for(var item : chart1.getData()){
+            dialog.getItems().add(item);
+        }
+        Optional<XYChart.Series> s = dialog.showAndWait();
+        JFrame frame = new JFrame();
+        JLabel X = new JLabel("X:");
+        JLabel Y = new JLabel("Y:");
+        X.setBounds(3,0,10,5);
+        Y.setBounds(3,20,10,5);
+        frame.add(X);
+        frame.add(Y);
+        frame.setBounds((dimension.width - 250)/2,(dimension.height - 200) / 2,250,200);
+        JTextField x = new JTextField("");
+        x.setBounds(20,5,150,30);
+        JTextField y = new JTextField("");
+        y.setBounds(20,35,150,30);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setVisible(true);
+        frame.setResizable(false);
+        frame.add(x);
+        frame.add(y);
+        JButton add = new JButton("Добавить");
+        add.addActionListener(e->s.get().getData().add(new XYChart.Data<>(10.,10.)));
+
+        Update();
     }
 
     public void GetData(String path) {
@@ -90,14 +157,13 @@ public class HelloController {
             for (int i = 0; i < curs.size(); i++) {
                 series.getData().add(new XYChart.Data<>(i, curs.get(i)));
             }
-            //chart1.setData(FXCollections.observableArrayList(new XYChart.Series("USD", plot(a))));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void Stat() {
-        Statistics stat = new Statistics(curs);// здесь статистика
+        Statistics stat = new Statistics(curs);
         System.out.println(stat.getMean());
         text.getChildren().add(new TextFlow(new Text(String.format(
                 "Статистика:\nКоличество:%s\nСумма:%s\nМинимум:%s\nМаксимум:%s\nСреднее:%s\nДисперсия:%s\nСреднее отклонение:%.3f\nМедиана:%.3f",
@@ -107,28 +173,32 @@ public class HelloController {
                 (float) stat.getVariance(),
                 (float) stat.getStdDev(),
                 stat.median()))));
-    }
+    }// здесь статистика
 
-    //Отрисовка графика
-    public void Graph(XYChart.Series series, String name, int code) {
-        series.setName(name);
-        String result ="";
-        int i =0;
+    public void Update(){
+        String result = "";
+        curs.clear();
+        text.getChildren().clear();
         try {
-            chart1.getData().add(series);// добовляю на lInechart серии значений
             for (var s : chart1.getData())
                 for (XYChart.Data<NumberAxis, NumberAxis> entry : s.getData()) {
-                    if(chart1.getData().indexOf(s) ==0 ){
-                        result = String.format("%s - %.2f", parsing.getTime().get(i), entry.getYValue());
+                        result = String.format("(%s ; %.2f)", entry.getXValue(), entry.getYValue());
                         Tooltip t = new Tooltip(result);
                         Tooltip.install(entry.getNode(), t);
-                        i++;
-                    }else {
-                        Tooltip t = new Tooltip(String.format("%.2f", entry.getYValue()));
-                        Tooltip.install(entry.getNode(), t);
-                    }
+                        curs.add(Double.parseDouble(String.valueOf(entry.getYValue())));
                 }
-            i=0;
+            Stat();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //Отрисовка графика
+    public void Graph(XYChart.Series series) {
+        series.setName("Graph" + numerator);
+        numerator++;
+        try {
+            chart1.getData().add(series);// добовляю на lInechart серии значений
+            Update();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,20 +260,30 @@ public class HelloController {
 
     //Открытие фала по нажатию на кнопку меню 'Open' на главном экране вызывается этот метод
     public void OpenFile() {
-        chart1.getData().clear();
-        textArea = "";
-        text2.getChildren().clear();
         final FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
         if (file != null) {
-            //openFile(file);
+            textArea = "";
             List<File> files = Arrays.asList(file);
             printLog(files);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Создать новый график?");
+            alert.setHeaderText("Вы действительно хотите создать новый график?");
+            alert.setContentText("Нажмите ОК для запуска и Cancel для отмены");
+            Optional<ButtonType> option = alert.showAndWait();
+
+            if (option.get() == null || option.get() == ButtonType.CANCEL) {
+                GetData(textArea);
+                Graph(series);
+            } else if (option.get() == ButtonType.OK) {
+                chart1.getData().clear();
+                text2.getChildren().clear();
+                GetData(textArea);
+                Graph(series);
+            }
+            System.out.println(textArea);
         }
-        System.out.println(textArea);
-        GetData(textArea);
-        Graph(series, "USD", 0);
-        Stat();
+
     }
 
     private void printLog(List<File> files) {
@@ -219,20 +299,12 @@ public class HelloController {
         }
     }
 
-    /*private void openFile(File file) {
-        try {
-            //this.desktop.open(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 //Открытие файла
 
 
     //Прогнозирование
     public void predict() {
         text2.getChildren().clear();
-        Statistics stat = new Statistics(curs);
         if (series2 != null)
             chart1.getData().remove(series2);
         int line = 0;
@@ -282,7 +354,6 @@ public class HelloController {
         }
         series2 = new XYChart.Series<>();
         //Отрисовка второго графика
-        series.setName("USD");
         series2.setName("Predict");
         Text text = new Text();
         StringBuilder str = new StringBuilder();
@@ -299,26 +370,6 @@ public class HelloController {
         }
         text.setFill(javafx.scene.paint.Color.RED);
         text.setText(str.toString());
-        Graph(series2, String.format("y=%.2f*(x-%s)+%.2f", b1,_x,_y),1);
-    }
-
-    private void doZoom(Rectangle zoomRect, LineChart<Number, Number> chart) {
-        Point2D zoomTopLeft = new Point2D(zoomRect.getX(), zoomRect.getY());
-        Point2D zoomBottomRight = new Point2D(zoomRect.getX() + zoomRect.getWidth(), zoomRect.getY() + zoomRect.getHeight());
-        final NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        Point2D yAxisInScene = yAxis.localToScene(0, 0);
-        final NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-        Point2D xAxisInScene = xAxis.localToScene(0, 0);
-        double xOffset = zoomTopLeft.getX() - yAxisInScene.getX() ;
-        double yOffset = zoomBottomRight.getY() - xAxisInScene.getY();
-        double xAxisScale = xAxis.getScale();
-        double yAxisScale = yAxis.getScale();
-        xAxis.setLowerBound(xAxis.getLowerBound() + xOffset / xAxisScale);
-        xAxis.setUpperBound(xAxis.getLowerBound() + zoomRect.getWidth() / xAxisScale);
-        yAxis.setLowerBound(yAxis.getLowerBound() + yOffset / yAxisScale);
-        yAxis.setUpperBound(yAxis.getLowerBound() - zoomRect.getHeight() / yAxisScale);
-        System.out.println(yAxis.getLowerBound() + " " + yAxis.getUpperBound());
-        zoomRect.setWidth(0);
-        zoomRect.setHeight(0);
+        Graph(series2);
     }
 }

@@ -1,6 +1,6 @@
 .chart-line-symbol {
-    -fx-background-color: #f9d900, white;
+    -fx-background-color: black, white;
     -fx-background-insets: 0, 2;
-    -fx-background-radius: 5px;
-    -fx-padding: 2px;
+    -fx-background-radius: 10px;
+    -fx-padding: 3px;
 }

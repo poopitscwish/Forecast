@@ -3,14 +3,12 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
 <VBox prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.forecast.HelloController">
@@ -18,33 +16,35 @@
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="305.0" prefWidth="900.0" />
     <MenuBar prefHeight="25.0" prefWidth="844.0">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="Открыть\Ввести">
           <items>
-            <MenuItem fx:id="Open" mnemonicParsing="false" onAction="#OpenFile" onMenuValidation="#OpenFile" text="Open" />
+            <MenuItem fx:id="Open" mnemonicParsing="false" onAction="#OpenFile" onMenuValidation="#OpenFile" text="Открыть файл" />
+                  <MenuItem mnemonicParsing="false" onAction="#EnterData" text="Ввести данные" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+        <Menu mnemonicParsing="false" text="Добавить точку">
           <items>
-            <MenuItem mnemonicParsing="false" text="Delete" />
+            <MenuItem mnemonicParsing="false" onAction="#SetPoint" text="Добавить точку" />
+                  <MenuItem mnemonicParsing="false" text="Удалить точку" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="Помощь">
           <items>
             <MenuItem mnemonicParsing="false" text="About" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Unspecified Menu">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
-          </items>
-        </Menu>
+            <Menu mnemonicParsing="false" text="Прогноз">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#predict" text="Выполнить прогноз" />
+              </items>
+            </Menu>
       </menus>
     </MenuBar>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="807.0">
       <children>
         <LineChart id="chart1" fx:id="chart1" layoutX="-11.0" layoutY="4.0" prefHeight="474.0" prefWidth="551.0" style="-fx-create-symbols: true;" styleClass=".chart-line-symbol {    -fx-background-color: #f9d900, firebrick;    -fx-background-radius: 0px;}" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="267.0" AnchorPane.topAnchor="4.0">
           <xAxis>
-            <NumberAxis fx:id="X1" label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" tickLabelRotation="-53.1" />
+            <NumberAxis fx:id="X1" label="Дата" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="10" tickLabelRotation="-53.1" />
           </xAxis>
           <yAxis>
             <NumberAxis fx:id="Y1" forceZeroInRange="false" label="Цена за 1 доллар в рублях" side="LEFT" upperBound="150.0">
@@ -54,21 +54,16 @@
                   </NumberAxis>
           </yAxis>
         </LineChart>
-        <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="540.0" layoutY="14.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="193.0" prefWidth="189.0" style="-fx-background-color: #bfbcbf;">
+        <TextFlow id="text" fx:id="text" focusTraversable="true" layoutX="540.0" layoutY="14.0" lineSpacing="2.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="192.0" prefWidth="182.0" style="-fx-background-color: #bfbcbf;">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </TextFlow>
-            <ScrollPane layoutX="553.0" layoutY="241.0" prefHeight="200.0" prefWidth="189.0" AnchorPane.rightAnchor="70.0">
+            <ScrollPane layoutX="540.0" layoutY="241.0" prefHeight="192.0" prefWidth="182.0" AnchorPane.rightAnchor="85.0">
                <content>
                   <TextFlow fx:id="text2" prefHeight="192.0" prefWidth="182.0" />
                </content>
             </ScrollPane>
-            <Button layoutX="14.0" layoutY="444.0" mnemonicParsing="false" onMouseClicked="#predict" text="Прогноз">
-               <font>
-                  <Font name="Ravie" size="12.0" />
-               </font>
-            </Button>
       </children>
     </AnchorPane>
    </children>

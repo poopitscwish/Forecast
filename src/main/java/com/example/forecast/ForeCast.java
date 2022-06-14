@@ -17,7 +17,7 @@ public class ForeCast extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(ForeCast.class.getResource("hello-view.fxml"));
         stage.setTitle("Forecast");
         Scene scene = new Scene (fxmlLoader.load());
-        stage.setScene(scene);
+        stage.setScene(scene);stage.setResizable(false);
         stage.show();
     }
 
