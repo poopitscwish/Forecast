@@ -2,5 +2,13 @@
     -fx-background-color: black, white;
     -fx-background-insets: 0, 2;
     -fx-background-radius: 10px;
-    -fx-padding: 3px;
+    -fx-padding: 5px;
 }
+.default-color0.chart-line-symbol { -fx-background-color: #f9d900, white; }
+.default-color1.chart-line-symbol { -fx-background-color: #a9e200, white; }
+.default-color2.chart-line-symbol { -fx-background-color: #22bad9, white; }
+.default-color3.chart-line-symbol { -fx-background-color: #0181e2, white; }
+.default-color4.chart-line-symbol { -fx-background-color: #2f357f, white; }
+.default-color5.chart-line-symbol { -fx-background-color: #860061, white; }
+.default-color6.chart-line-symbol { -fx-background-color: #c62b00, white; }
+.default-color7.chart-line-symbol { -fx-background-color: #ff5700, white; }

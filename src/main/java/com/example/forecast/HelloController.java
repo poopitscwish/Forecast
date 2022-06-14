@@ -8,6 +8,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
@@ -15,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -57,6 +60,7 @@ public class HelloController {
     private ArrayList<Double> curs;
     String textArea;
     Parsing parsing;
+    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 
     @FXML
     void initialize() {
@@ -80,13 +84,11 @@ public class HelloController {
                 data.add(Double.parseDouble(result[i]));
                 series.getData().add(new XYChart.Data<>(i, data.get(i)));
             }
-
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Выбор");
             alert.setHeaderText("Создать новый график?");
             alert.setContentText("Нажмите ОК для запуска и Cancel для отмены");
             Optional<ButtonType> option = alert.showAndWait();
-
             if (option.get() == null || option.get() == ButtonType.CANCEL) {
                 chart1.getData().clear();
                 text2.getChildren().clear();
@@ -108,36 +110,72 @@ public class HelloController {
         }
     }
 
-    public void SetPoint(){
+    public void SetPoint() {
         ChoiceDialog<XYChart.Series> dialog = new ChoiceDialog<>();
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         dialog.setContentText("К какому графику добавить?");
         dialog.setHeaderText(null);
-        for(var item : chart1.getData()){
+        for (var item : chart1.getData()) {
             dialog.getItems().add(item);
         }
         Optional<XYChart.Series> s = dialog.showAndWait();
         JFrame frame = new JFrame();
+        Container container = frame.getContentPane();
+        container.setLayout(null);
         JLabel X = new JLabel("X:");
         JLabel Y = new JLabel("Y:");
-        X.setBounds(3,0,10,5);
-        Y.setBounds(3,20,10,5);
-        frame.add(X);
-        frame.add(Y);
-        frame.setBounds((dimension.width - 250)/2,(dimension.height - 200) / 2,250,200);
+        X.setBounds(3, 5, 15, 25);
+        Y.setBounds(3, 35, 15, 25);
+        container.add(X);
+        container.add(Y);
+        frame.setBounds((dimension.width - 200) / 2, (dimension.height - 150) / 2, 200, 150);
         JTextField x = new JTextField("");
-        x.setBounds(20,5,150,30);
+        x.setBounds(20, 5, 150, 30);
         JTextField y = new JTextField("");
-        y.setBounds(20,35,150,30);
+        y.setBounds(20, 35, 150, 30);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
-        frame.setResizable(false);
-        frame.add(x);
-        frame.add(y);
+        frame.setResizable(true);
+        container.add(x);
+        container.add(y);
         JButton add = new JButton("Добавить");
-        add.addActionListener(e->s.get().getData().add(new XYChart.Data<>(10.,10.)));
+        add.setBounds(40, 70, 100, 30);
+        container.add(add);
+        try {
 
-        Update();
+            add.addActionListener(e -> {
+                double _X = Double.parseDouble(x.getText());
+                double _Y = Double.parseDouble(y.getText());
+                s.get().getData().add(new XYChart.Data<>(_X, _Y));
+            });
+            Update();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("Введите числа");
+            alert.showAndWait();
+        }
+    }
+
+    public void Delete() {
+        ChoiceDialog<XYChart.Series> dialog = new ChoiceDialog<>();
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        dialog.setContentText("Выберете график");
+        dialog.setHeaderText(null);
+        for (var item : chart1.getData()) {
+            dialog.getItems().add(item);
+        }
+        Optional<XYChart.Series> ser = dialog.showAndWait();
+        String a = JOptionPane.showInputDialog("Введите X:");
+        try {
+            int index = Integer.parseInt(a);
+            ser.get().getData().remove(index);
+            Update();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
     }
 
     public void GetData(String path) {
@@ -175,27 +213,30 @@ public class HelloController {
                 stat.median()))));
     }// здесь статистика
 
-    public void Update(){
+    public void Update() {
         String result = "";
         curs.clear();
-        text.getChildren().clear();
         try {
+            text.getChildren().clear();
             for (var s : chart1.getData())
                 for (XYChart.Data<NumberAxis, NumberAxis> entry : s.getData()) {
-                        result = String.format("(%s ; %.2f)", entry.getXValue(), entry.getYValue());
-                        Tooltip t = new Tooltip(result);
-                        Tooltip.install(entry.getNode(), t);
-                        curs.add(Double.parseDouble(String.valueOf(entry.getYValue())));
+                    result = String.format("(%s ; %.2f)", entry.getXValue(), entry.getYValue());
+                    Tooltip t = new Tooltip(result);
+                    Tooltip.install(entry.getNode(), t);
+                    curs.add(Double.parseDouble(String.valueOf(entry.getYValue())));
                 }
             Stat();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //Отрисовка графика
     public void Graph(XYChart.Series series) {
-        series.setName("Graph" + numerator);
-        numerator++;
+        if (series.getName() == null) {
+            series.setName("Graph" + numerator);
+            numerator++;
+        }
         try {
             chart1.getData().add(series);// добовляю на lInechart серии значений
             Update();
@@ -370,6 +411,35 @@ public class HelloController {
         }
         text.setFill(javafx.scene.paint.Color.RED);
         text.setText(str.toString());
-        Graph(series2);
+        series2.setName(String.format("y=%.2f*(x-%.2f)+%s", b1, _y, _x));
+        try {
+            Graph(series2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void Help() {
+        TextFlow textflow = new TextFlow();
+        Text help = new Text();
+        help.setText(String.format("Forecast - это программа для построения графиков используя данные с файла или ручного ввода, статистического анализа и прогнозирования на основе линии регресии.\n" +
+                "Данная программа посзволяет добавлять и работать с графиками по отдельности: добавлять графики, добавлять или удалять точки отдельных графиков."));
+        textflow.getChildren().add(help);
+        StackPane secondaryLayout = new StackPane();
+        secondaryLayout.getChildren().add(textflow);
+        int w = 300;
+        int h = 300;
+        Scene secondScene = new Scene(secondaryLayout, w, h);
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        newWindow.setTitle("О программе");
+        newWindow.setScene(secondScene);
+
+        // Set position of second window, related to primary window.
+        newWindow.setX((dimension.width-w) / 2);
+        newWindow.setY((dimension.height-h) / 2);
+
+        newWindow.show();
     }
 }

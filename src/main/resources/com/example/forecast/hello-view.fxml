@@ -22,15 +22,15 @@
                   <MenuItem mnemonicParsing="false" onAction="#EnterData" text="Ввести данные" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Добавить точку">
+        <Menu mnemonicParsing="false" text="Редактировать">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#SetPoint" text="Добавить точку" />
-                  <MenuItem mnemonicParsing="false" text="Удалить точку" />
+                  <MenuItem mnemonicParsing="false" onAction="#Delete" text="Удалить точку" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Помощь">
           <items>
-            <MenuItem mnemonicParsing="false" text="About" />
+            <MenuItem mnemonicParsing="false" onAction="#Help" text="О программе" />
           </items>
         </Menu>
             <Menu mnemonicParsing="false" text="Прогноз">
